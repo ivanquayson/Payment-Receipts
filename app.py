@@ -18,3 +18,7 @@ data = [
     ["Discount", "", "", "50/-"],
     ["Total", "", "", "625/-"],
 ]
+
+pdf = SimpleDocTemplate( "receipt.pdf" , pagesize = A4 )
+
+styles = getSampleStyleSheet() 
