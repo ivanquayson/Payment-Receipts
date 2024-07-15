@@ -26,7 +26,7 @@ def get_receipts_details():
     details["items"] = []
     while True:
         item = {}
-        item["qty"] = input("Enter item quality: ")
+        item["qty"] = input("Enter item quantity: ")
         item["description"] = input("Enter item description: ")
         item["unit_price"] = input("Enter item unit price: ")
         item["amount"] = input("Enter item amount: ")
@@ -34,3 +34,8 @@ def get_receipts_details():
         more = input("Add another item? (yes/no): ")
         if more.lower() != "yes":
             break
+
+    # Totals
+    details["subtotal"] = input("Enter subtotal: ")
+    details["sales_tax"] = input("Enter sales tax: ")
+    details["subtotal"] = input("Enter subtotal: ")
