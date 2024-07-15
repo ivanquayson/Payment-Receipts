@@ -1,33 +1,11 @@
-"""
-get_receipts_details
-
-Inputs
-User inputs for company name, address, city, bill-to name, address, city, receipt number,
-date, item details (quantity, description, unit price, amount), subtotal, sales tax,
-total, and notes.
-
-Flow
-Initialize an empty dictionary details.
-Collect company details and store them in the dictionary.
-Collect bill-to details and store them in the dictionary.
-Collect receipt details and store them in the dictionary.
-Collect item details in a loop until the user decides to stop, and store them in a list within
-the dictionary.
-Collect subtotal, sales tax, and total, and store them in the dictionary.
-Collect any additional notes and store them in the dictionary.
-Return the populated details dictionary.
-
-Outputs
-A dictionary containing all the collected receipt details.
-"""
-
-# Importing modules
-from PIL import Image
+from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import inch
-from reportlab.pdfgen import canvas
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
 
 
-def get_receipts_details():
+def get_receipt_details():
     details = {}
 
     # Company details
@@ -35,7 +13,7 @@ def get_receipts_details():
     details["company_address"] = input("Enter company address: ")
     details["company_city"] = input("Enter company city and state: ")
 
-    # Bill-to details
+    # Bill To details
     details["bill_to_name"] = input("Enter Bill To name: ")
     details["bill_to_address"] = input("Enter Bill To address: ")
     details["bill_to_city"] = input("Enter Bill To city and state: ")
@@ -68,15 +46,7 @@ def get_receipts_details():
     return details
 
 
-def generate_receipt(details, template_path, output_path):
-    template = Image.open(template_path)
-    template_width, template_height = template.size
+def generate_receipt(details, output_path):
+    doc = SimpleDocTemplate(output_path, pagesize=letter)
+    elements = []
 
-    template_width_inch = template_width/300
-    template_height_inch = template_height/300
-
-    c = canvas.Canvas(output_path, pagesize=(template_width_inch * inch,
-                                             template_height_inch * inch))
-    c.drawImage(template_path, 0, 0, width=template_width_inch * inch,
-                height=template_height_inch * inch)
-    c.setFont("Helvetica", 10)
