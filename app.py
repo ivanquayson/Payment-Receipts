@@ -21,3 +21,11 @@ def get_receipts_details():
     # Receipt details
     details["receipt_number"] = input("Enter receipt number: ")
     details["receipt_date"] = input("Enter receipt date (DD-MM-YYYY): ")
+
+    # Items
+    details["items"] = []
+    while True:
+        item = {}
+        item["qty"] = input("Enter item quality")
+        item["description"] = input("Enter item description")
+        item["unit_price"] = input("Enter item unit price")
