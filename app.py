@@ -11,12 +11,12 @@ def get_receipt_details():
     # Company details
     details["company_name"] = input("Enter company name: ")
     details["company_address"] = input("Enter company address: ")
-    details["company_city"] = input("Enter company city and state: ")
+    details["company_city"] = input("Enter company city: ")
 
     # Bill To details
     details["bill_to_name"] = input("Enter Bill To name: ")
     details["bill_to_address"] = input("Enter Bill To address: ")
-    details["bill_to_city"] = input("Enter Bill To city and state: ")
+    details["bill_to_city"] = input("Enter Bill To city: ")
 
     # Receipt details
     details["receipt_number"] = input("Enter receipt number: ")
@@ -49,4 +49,3 @@ def get_receipt_details():
 def generate_receipt(details, output_path):
     doc = SimpleDocTemplate(output_path, pagesize=letter)
     elements = []
-
