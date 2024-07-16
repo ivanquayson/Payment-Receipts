@@ -54,24 +54,12 @@ def generate_receipt(details, output_path):
 
     if 'Title' not in styles:
         styles.add(ParagraphStyle(name='Title', fontSize=18, leading=22, spaceAfter=12))
-    else:
-        styles['Title'].fontSize = 18
-        styles['Title'].leading = 22
-        styles['Title'].spaceAfter = 12
 
     if 'Heading' not in styles:
         styles.add(ParagraphStyle(name='Heading', fontSize=12, leading=14, spaceAfter=8))
-    else:
-        styles['Heading'].fontSize = 12
-        styles['Heading'].leading = 14
-        styles['Heading'].spaceAfter = 8
 
     if 'Body' not in styles:
         styles.add(ParagraphStyle(name='Body', fontSize=10, leading=12, spaceAfter=6))
-    else:
-        styles['Body'].fontSize = 10
-        styles['Body'].leading = 12
-        styles['Body'].spaceAfter = 6
 
     # Company details
     company_info = f"""
@@ -82,7 +70,7 @@ def generate_receipt(details, output_path):
     elements.append(Paragraph(company_info, styles['Body']))
 
     # Spacer
-    elements.append(Spacer(1, 12))
+    elements.append(Spacer(1, 70))
 
     # Bill To details
     bill_to_info = f"""
@@ -106,3 +94,63 @@ def generate_receipt(details, output_path):
     # Spacer
     elements.append(Spacer(1, 24))
 
+    # Table of items
+    table_data = [["QTY", "Description", "Unit Price", "Amount"]]
+    for item in details["items"]:
+        table_data.append([item["qty"], item["description"], item["unit_price"], item["amount"]])
+
+    table = Table(table_data, colWidths=[0.5 * inch, 3 * inch, 1 * inch, 1 * inch])
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#054D02')),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.white),
+        ('LINEBELOW', (0, -1), (-1, -1), 1, colors.black),  # line under last item
+    ]))
+    elements.append(table)
+
+    # Spacer
+    elements.append(Spacer(1, 12))
+
+    # Totals
+    totals_table_data = [
+        ["", "", "Subtotal", details["subtotal"]],
+        ["", "", "Sales Tax", details["sales_tax"]],
+        ["", "", "<b>Total (USD)</b>", f"<b>{details['total']}</b>"]
+    ]
+    totals_table = Table(totals_table_data, colWidths=[0.5 * inch, 3 * inch, 1 * inch, 1 * inch])
+    totals_table.setStyle(TableStyle([
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('LINEBELOW', (2, 1), (3, 1), 1, colors.black),  # line below sales tax
+        ('LINEBELOW', (2, 2), (3, 2), 1, colors.black),  # line below total
+        ('FONTSIZE', (0, 0), (-1, -1), 10),
+        ('FONTNAME', (2, -1), (3, -1), 'Helvetica-Bold'),
+    ]))
+    elements.append(totals_table)
+
+    # Spacer
+    elements.append(Spacer(1, 24))
+
+    # Notes
+    notes_info = f"""
+    <b>Notes:</b><br/>
+    {details["notes"]}<br/>
+    """
+    elements.append(Paragraph(notes_info, styles['Body']))
+
+    # Build PDF
+    doc.build(elements)
+
+
+# Get receipt details from user input
+details = get_receipt_details()
+
+# Define output path
+output_path = "generated_receipt.pdf"  # Update this path to the desired output location
+
+# Generate the receipt
+generate_receipt(details, output_path)
+
+print("Receipt generated successfully!")
