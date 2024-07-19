@@ -12,7 +12,7 @@ def get_receipt_details():
         while True:
             value = input(prompt)
             if any(char.isdigit() for char in value):
-                print("Invalid input: input should not contain numbers. Please try again.")
+                print("Invalid input: Input should not contain numbers. Please try again.")
             else:
                 return value
 
@@ -30,20 +30,23 @@ def get_receipt_details():
             date_str = input(prompt)
             try:
                 date = datetime.strptime(date_str, "%d-%m-%Y")
+                return date_str
+            except ValueError:
+                print("Invalid date format: Please enter the date in DD-MM-YYYY format.")
 
     # Company details
-    details["company_name"] = input("Enter company name: ")
+    details["company_name"] = get_string("Enter company name: ")
     details["company_address"] = input("Enter company address: ")
-    details["company_city"] = input("Enter company city: ")
+    details["company_city"] = get_string("Enter company city: ")
 
     # Bill To details
-    details["bill_to_name"] = input("Enter Bill To name: ")
+    details["bill_to_name"] = get_string("Enter Bill To name: ")
     details["bill_to_address"] = input("Enter Bill To address: ")
-    details["bill_to_city"] = input("Enter Bill To city: ")
+    details["bill_to_city"] = get_string("Enter Bill To city: ")
 
     # Receipt details
     details["receipt_number"] = input("Enter receipt number: ")
-    details["receipt_date"] = input("Enter receipt date (DD-MM-YYYY): ")
+    details["receipt_date"] = getdate("Enter receipt date (DD-MM-YYYY): ")
 
     # Items
     details["items"] = []
