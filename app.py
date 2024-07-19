@@ -29,10 +29,18 @@ def get_receipt_details():
         while True:
             date_str = input(prompt)
             try:
-                date = datetime.strptime(date_str, "%d-%m-%Y")
+                datetime.strptime(date_str, "%d-%m-%Y")
                 return date_str
             except ValueError:
                 print("Invalid date format: Please enter the date in DD-MM-YYYY format.")
+
+    def get_yes_no(prompt):
+        while True:
+            value = input(prompt).strip().lower()
+            if value in ["yes", "no"]:
+                return value
+            else:
+                print("Invalid input: please enter 'yes' or 'no'.")
 
     # Company details
     details["company_name"] = get_string("Enter company name: ")
@@ -52,22 +60,22 @@ def get_receipt_details():
     details["items"] = []
     while True:
         item = {}
-        item["qty"] = input("Enter item quantity: ")
-        item["description"] = input("Enter item description: ")
-        item["unit_price"] = input("Enter item unit price: ")
-        item["amount"] = input("Enter item amount: ")
+        item["qty"] = get_number("Enter item quantity: ", int)
+        item["description"] = get_string("Enter item description: ")
+        item["unit_price"] = get_number("Enter item unit price: ", float)
+        item["amount"] = get_number("Enter item amount: ", float)
         details["items"].append(item)
-        more = input("Add another item? (yes/no): ")
+        more = get_yes_no("Add another item? (yes/no): ")
         if more.lower() != "yes":
             break
 
     # Totals
-    details["subtotal"] = input("Enter subtotal: ")
-    details["sales_tax"] = input("Enter sales tax: ")
-    details["total"] = input("Enter total: ")
+    details["subtotal"] = get_number("Enter subtotal: ", float)
+    details["sales_tax"] = get_number("Enter sales tax: ", float)
+    details["total"] = get_number("Enter total: ", float)
 
     # Notes
-    details["notes"] = input("Enter notes: ")
+    details["notes"] = get_string("Enter notes: ")
 
     return details
 
