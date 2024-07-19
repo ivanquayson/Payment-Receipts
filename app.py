@@ -8,6 +8,29 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, 
 def get_receipt_details():
     details = {}
 
+    def get_string(prompt):
+        while True:
+            value = input(prompt)
+            if any(char.isdigit() for char in value):
+                print("Invalid input: input should not contain numbers. Please try again.")
+            else:
+                return value
+
+    def get_number(prompt, number_type=int):
+        while True:
+            try:
+                value = number_type(input(prompt))
+                return value
+            except ValueError:
+                print(f"Invalid input: Please enter a valid {number_type.__name__}.")
+
+    def getdate(prompt):
+        from datetime import datetime
+        while True:
+            date_str = input(prompt)
+            try:
+                date = datetime.strptime(date_str, "%d-%m-%Y")
+
     # Company details
     details["company_name"] = input("Enter company name: ")
     details["company_address"] = input("Enter company address: ")
@@ -117,8 +140,8 @@ def generate_receipt(details, output_path):
     # Totals
     totals_table_data = [
         ["", "", "Subtotal", details["subtotal"]],
-        ["", "", "Sales Tax", details["sales_tax"]],
-        ["", "", "<b>Total (USD)</b>", f"<b>{details['total']}</b>"]
+        ["", "", "Sales Tax (5%)", details["sales_tax"]],
+        ["", "", "<b>Total (GH)</b>", f"<b>{details['total']}</b>"]
     ]
     totals_table = Table(totals_table_data, colWidths=[0.5 * inch, 3 * inch, 1 * inch, 1 * inch])
     totals_table.setStyle(TableStyle([
@@ -128,6 +151,17 @@ def generate_receipt(details, output_path):
         ('FONTSIZE', (0, 0), (-1, -1), 10),
         ('FONTNAME', (2, -1), (3, -1), 'Helvetica-Bold'),
     ]))
+
+    totals_table_style = TableStyle([
+        ('ALIGN', (2, 0), (-1, -1), 'LEFT'),
+        ('ALIGN', (3, 0), (-1, -1), 'RIGHT'),
+        ('FONTSIZE', (0, 0), (-1, -1), 10),
+        ('FONTNAME', (2, -1), (3, -1), 'Helvetica-Bold'),
+        ('LINEBELOW', (2, 1), (3, 1), 1, colors.black),  # line below sales tax
+        ('LINEBELOW', (2, 2), (3, 2), 1, colors.black),  # line below total
+    ])
+    totals_table.setStyle(totals_table_style)
+
     elements.append(totals_table)
 
     # Spacer
